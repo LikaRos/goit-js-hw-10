@@ -14,17 +14,12 @@ function readCountry(event) {
   const countryInput = event.target.value.trim();
   if (countryInput) {
     fetchCountries(countryInput)
-      .then(response => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        Notiflix.Notify.failure('OOps, there is no  country with this name');
-      })
       .then(data => {
         if (data.length === 1) {
           renderCountry(data[0]);
         } else if (data.length < 10) {
           renderCountries(data);
+          countryInfo.innerHTML = '';
         } else {
           Notiflix.Notify.info(
             'Too many matches found. Please, enter more specific name'
@@ -32,7 +27,9 @@ function readCountry(event) {
         }
       })
       .catch(error => {
-        Notiflix.Notify.failure('OOps, there is no  country with this name');
+        Notiflix.Notify.failure(error.message);
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';
       });
   } else {
     countryList.innerHTML = '';
